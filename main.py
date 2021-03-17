@@ -22,7 +22,7 @@ def convert(images, ques_number):
         print(e)
 
 
-def main(questions, pages_per_question, first_ques=1, cover_page=None):
+def main(questions, pages_per_question, cover_page=None, question_numbers = None):
     assert len(pages_per_question) == questions   # valid set of inputs
 
     files = sorted(
@@ -34,17 +34,23 @@ def main(questions, pages_per_question, first_ques=1, cover_page=None):
 
     assert sum(pages_per_question) == len(files)  # else missing pages
 
+    if question_numbers:
+        assert len(pages_per_question) == len(question_numbers)
+
     ctr = 0
-    question_number = first_ques
+    ques_count = 1
     for i in pages_per_question:
         if cover_page:
             current_set = [cover_page]+files[ctr:ctr+i]
         else:
             current_set = files[ctr:ctr+i]
+        if question_numbers:
+            question_number = question_numbers[ques_count-1] if question_numbers else ques_count
+
         convert(current_set, question_number)
         ctr += i
-        question_number += 1
+        ques_count += 1
 
 
 if __name__ == '__main__':
-    main(1, [3], cover_page="cover.jpeg", first_ques=1)
+    main(3, [2,3,2], cover_page="cover.jpeg", question_numbers=[1,2,6])
